@@ -208,7 +208,7 @@ def main() -> None:
         st.session_state.selected_case = ""
     if "top_k" not in st.session_state:
         st.session_state.top_k = 4
-    cases = load_cases(Path("data/adversarial_cases.json"))
+    cases = load_cases(Path(__file__).parent / "data" / "adversarial_cases.json")
 
     with st.sidebar:
         st.header("Query Controls")
