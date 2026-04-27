@@ -120,7 +120,8 @@ class TriageAuditor:
         distances = retrieval_result.get("distances", [[]])[0]
         retrieval_conf = _normalized_retrieval_confidence(distances)
         generation_conf = _answer_confidence_score(answer)
-        flagged = retrieval_conf < 0.45 and generation_conf > 0.65
+        # Slightly lower thresholds improve adversarial-demo sensitivity.
+        flagged = retrieval_conf < 0.55 and generation_conf > 0.45
         return {
             "flag_id": "flag_5_handoff_confidence_laundering",
             "flagged": flagged,
@@ -147,7 +148,7 @@ class TriageAuditor:
         distances = retrieval_result.get("distances", [[]])[0]
         best_distance = min(distances) if distances else 1.0
         generation_conf = _answer_confidence_score(answer)
-        flagged = best_distance > 0.75 and generation_conf > 0.6
+        flagged = best_distance > 0.6 and generation_conf > 0.45
         return {
             "flag_id": "flag_6_ood_confidence",
             "flagged": flagged,
@@ -173,7 +174,7 @@ class TriageAuditor:
                 "detectability": "low",
             }
         spread = max(distances) - min(distances)
-        flagged = spread < 0.03
+        flagged = spread < 0.05
         return {
             "flag_id": "flag_7_suspiciously_clean_convergence",
             "flagged": flagged,
